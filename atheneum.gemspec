@@ -8,8 +8,12 @@ Gem::Specification.new do |spec|
   spec.version       = Atheneum::VERSION
   spec.authors       = ["Peter"]
   spec.email         = ["peterhsaxton@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A micro gem for the immaculate inclusion of BCrypt protected data for example passwords}
+  spec.description   = %q{Simply declare attributes that require obscuring and that will make it so.
+                          Useful in exposing buisness logic in objects that use BCrypt
+                          This gem currently assumes that BCrypt is available rather than adding it as a dependency,
+                          future versions might support general strategies.
+                        }
   spec.homepage      = ""
   spec.license       = "MIT"
 
