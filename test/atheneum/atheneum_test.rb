@@ -52,4 +52,13 @@ class AtheneumTest < MiniTest::Test
     store = dummy_class.new 'item'.upcase
     assert_equal 'item', store.item
   end
+
+  def test_can_include_multiple_strategies
+    dummy_class = Struct.new(:upper_cased_item, :reversed_other)
+    dummy_class = dummy_class.include Atheneum.upper_case :item
+    dummy_class = dummy_class.include Atheneum.reverse :other
+    store = dummy_class.new 'item'.upcase, 'password'.reverse
+    assert_equal 'item', store.item
+    assert_equal 'password', store.other
+  end
 end
