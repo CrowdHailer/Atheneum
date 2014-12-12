@@ -22,4 +22,19 @@ class AtheneumTest < MiniTest::Test
     store = dummy_class.new 'password'.reverse
     assert_equal 'password', store.password
   end
+
+  def test_can_store_a_other_reversed
+    dummy_class = Struct.new(:reversed_other)
+    dummy_class = dummy_class.include Atheneum.reverse :other
+    store = dummy_class.new
+    store.other = 'other'
+    assert_equal 'other'.reverse, store.reversed_other
+  end
+
+  def test_can_retrieve_a_other_reversed
+    dummy_class = Struct.new(:reversed_other)
+    dummy_class = dummy_class.include Atheneum.reverse :other
+    store = dummy_class.new 'other'.reverse
+    assert_equal 'other', store.other
+  end
 end
