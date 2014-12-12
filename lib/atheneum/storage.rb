@@ -15,19 +15,19 @@ module Atheneum
       Module.new do
         records.each do |record|
           define_method "#{record}=", ->(item){
-            self.send "#{strategy.stored_attribute(record)}=", strategy.pack(item)
+            self.send "#{strategy.store_for(record)}=", strategy.pack(item)
           }
 
           define_method record, -> (){
-            strategy.unpack(self.send("#{strategy.stored_attribute(record)}"))
+            strategy.unpack(self.send("#{strategy.store_for(record)}"))
           }
         end
 
         if strategy.privatise?
           define_singleton_method :'included', ->(klass){
             records.each do |record|
-              klass.send :private, strategy.stored_attribute(record)
-              klass.send :private, "#{strategy.stored_attribute(record)}="
+              klass.send :private, strategy.store_for(record)
+              klass.send :private, "#{strategy.store_for(record)}="
             end
           }
         end

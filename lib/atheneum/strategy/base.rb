@@ -7,12 +7,8 @@ module Atheneum
 
       attr_reader :options
 
-      def stored_attribute(attribute)
+      def store_for(attribute)
         "#{prefix}_#{attribute}"
-      end
-
-      def store_for(x)
-        stored_attribute(x)
       end
 
       def prefix
