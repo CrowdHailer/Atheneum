@@ -26,6 +26,14 @@ module Atheneum
             strategy.unpack(self.send("#{strategy.stored_attribute(record)}"))
           }
         end
+
+        define_singleton_method :'included', ->(klass){
+          records.each do |record|
+            klass.send :private, strategy.stored_attribute(record)
+            klass.send :private, "#{strategy.stored_attribute(record)}="
+          end
+        }
+
       end
     end
 

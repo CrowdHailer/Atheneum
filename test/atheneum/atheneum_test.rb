@@ -13,7 +13,7 @@ class AtheneumTest < MiniTest::Test
     dummy_class = dummy_class.include Atheneum.reverse :password
     store = dummy_class.new
     store.password = 'password'
-    assert_equal 'password'.reverse, store.reversed_password
+    assert_equal 'password'.reverse, store.send(:reversed_password)
   end
 
   def test_can_retrieve_a_password_reversed
@@ -28,7 +28,7 @@ class AtheneumTest < MiniTest::Test
     dummy_class = dummy_class.include Atheneum.reverse :other
     store = dummy_class.new
     store.other = 'other'
-    assert_equal 'other'.reverse, store.reversed_other
+    assert_equal 'other'.reverse, store.send(:reversed_other)
   end
 
   def test_can_retrieve_a_other_reversed
@@ -43,7 +43,7 @@ class AtheneumTest < MiniTest::Test
     dummy_class = dummy_class.include Atheneum.upper_case :item
     store = dummy_class.new
     store.item = 'item'
-    assert_equal 'item'.upcase, store.upper_cased_item
+    assert_equal 'item'.upcase, store.send(:upper_cased_item)
   end
 
   def test_can_retrieve_a_item_upper_cased
@@ -67,6 +67,30 @@ class AtheneumTest < MiniTest::Test
     dummy_class = dummy_class.include Atheneum.reverse :password
     assert_raises NoMethodError do
       dummy_class.blah        
+    end
+  end
+
+  def test_privatizes_storage_methods
+    dummy_class = Struct.new(:reversed_password)
+    dummy_class = dummy_class.include Atheneum.reverse :password
+    store = dummy_class.new
+    assert_raises NoMethodError do
+      store.reversed_password
+    end
+    assert_raises NoMethodError do
+      store.reversed_password = 3
+    end
+  end
+
+  def test_privatizes_storage_methods_diff
+    dummy_class = Struct.new(:upper_cased_item)
+    dummy_class = dummy_class.include Atheneum.upper_case :item
+    store = dummy_class.new
+    assert_raises NoMethodError do
+      store.upper_cased_item
+    end
+    assert_raises NoMethodError do
+      store.upper_cased_item = 3
     end
   end
 end
