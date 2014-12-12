@@ -1,15 +1,15 @@
 module Atheneum
   class Strategy
-    module UpperCase
-      def self.pack(item)
+    class UpperCase
+      def pack(item)
         item.upcase
       end
 
-      def self.unpack(item)
+      def unpack(item)
         item.downcase
       end
 
-      def self.prefix
+      def prefix
         "upper_cased"
       end
     end

@@ -1,15 +1,15 @@
 module Atheneum
   class Strategy
-    module Reverse
-      def self.pack(item)
+    class Reverse
+      def pack(item)
         item.reverse
       end
 
-      def self.unpack(item)
+      def unpack(item)
         item.reverse
       end
 
-      def self.prefix
+      def prefix
         "reversed"
       end
     end
