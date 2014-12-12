@@ -1,20 +1,14 @@
+require_relative './base'
+
 module Atheneum
   class Strategy
-    class Reverse
+    class Reverse < Base
       def pack(item)
         item.reverse
       end
 
       def unpack(item)
         item.reverse
-      end
-
-      def prefix
-        "reversed"
-      end
-
-      def stored_attribute(attribute)
-        "#{prefix}_#{attribute}"
       end
     end
   end
