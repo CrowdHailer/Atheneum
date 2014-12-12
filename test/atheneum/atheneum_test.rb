@@ -61,4 +61,12 @@ class AtheneumTest < MiniTest::Test
     assert_equal 'item', store.item
     assert_equal 'password', store.other
   end
+
+  def test_method_missing_doesnt_affect_host_class
+    dummy_class = Struct.new(:reversed_password)
+    dummy_class = dummy_class.include Atheneum.reverse :password
+    assert_raises NoMethodError do
+      dummy_class.blah        
+    end
+  end
 end
