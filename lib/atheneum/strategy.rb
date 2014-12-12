@@ -6,7 +6,7 @@ module Atheneum
     def self.find(name)
       nodule = constantize(name)
       begin
-        const_get(nodule).new
+        const_get(nodule)
       rescue NameError
         raise StrategyUndefined.new "Strategy \"#{nodule}\" not found"
       end

@@ -93,4 +93,12 @@ class AtheneumTest < MiniTest::Test
       store.upper_cased_item = 3
     end
   end
+
+  def test_doesnt_privatizes_storage_methods_diff_on_option
+    dummy_class = Struct.new(:upper_cased_item)
+    dummy_class = dummy_class.include Atheneum.upper_case :item, :privatise => false
+    store = dummy_class.new
+    store.upper_cased_item
+    store.upper_cased_item = 3
+  end
 end

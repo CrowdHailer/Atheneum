@@ -27,19 +27,21 @@ module Atheneum
           }
         end
 
-        define_singleton_method :'included', ->(klass){
-          records.each do |record|
-            klass.send :private, strategy.stored_attribute(record)
-            klass.send :private, "#{strategy.stored_attribute(record)}="
-          end
-        }
+        if strategy.privatise?
+          define_singleton_method :'included', ->(klass){
+            records.each do |record|
+              klass.send :private, strategy.stored_attribute(record)
+              klass.send :private, "#{strategy.stored_attribute(record)}="
+            end
+          }
+        end
 
       end
     end
 
-    def self.generate strategy_name, attributes
+    def self.generate strategy_name, attributes, options
       strategy = Strategy.find strategy_name
-      storage = new strategy
+      storage = new strategy.new(options)
       storage.for attributes
     end
   end
@@ -47,6 +49,8 @@ end
 
 module Atheneum
   def self.method_missing(strategy, *attributes, &block)
-    Storage.generate strategy, attributes
+    options = attributes.pop if attributes.last.class == Hash
+    options ||= {}
+    Storage.generate strategy, attributes, options
   end
 end
