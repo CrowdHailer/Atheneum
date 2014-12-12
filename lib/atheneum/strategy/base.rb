@@ -1,11 +1,6 @@
 module Atheneum
   class Strategy
-    class Base
-      def initialize(options)
-        @options = options
-      end
-
-      attr_reader :options
+    class Base < Struct.new(:options)
 
       def store_for(attribute)
         "#{prefix}_#{attribute}"
