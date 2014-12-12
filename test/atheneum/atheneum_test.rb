@@ -101,4 +101,12 @@ class AtheneumTest < MiniTest::Test
     store.upper_cased_item
     store.upper_cased_item = 3
   end
+
+  def test_can_overwrite_prefix
+    dummy_class = Struct.new(:random_password)
+    dummy_class = dummy_class.include Atheneum.reverse :password, :prefix => :random
+    store = dummy_class.new
+    store.password = 'password'
+    assert_equal 'password'.reverse, store.send(:random_password)
+  end
 end
