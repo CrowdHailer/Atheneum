@@ -4,13 +4,44 @@ require "atheneum/errors"
 module Atheneum
   class Strategy
     module Reverse
-      def password=(password)
-        self.reversed_password = password.reverse
+      def pack(item)
+        item.reverse
       end
 
-      def password
-        reversed_password.reverse
+      def unpack(item)
+        item.reverse
       end
+
+      def prefix
+        "reversed"
+      end
+    end
+
+    module UpperCase
+      def pack(item)
+        item.upcase
+      end
+
+      def unpack(item)
+        item.downcase
+      end
+
+      def prefix
+        "upper_cased"
+      end
+    end
+
+    def self.find(name)
+      nodule = constantize(name)
+      begin
+        const_get nodule
+      rescue NameError
+        raise StrategyUndefined.new "Strategy \"#{nodule}\" not found"
+      end
+    end
+
+    def self.constantize(string)
+      string.to_s.split('_').map(&:capitalize).join
     end
   end
 
@@ -29,25 +60,22 @@ module Atheneum
       Module.new do
         records.each do |record|
           define_method "#{record}=", ->(item){
-            self.send "reversed_#{record}=", item.reverse
+            self.send "#{prefix}_#{record}=", pack(item)
           }
 
           define_method record, -> (){
-            self.send("reversed_#{record}").reverse
+            unpack(self.send("#{prefix}_#{record}"))
           }
         end
-      end
+      end.include strategy
     end
   end
 end
 
 module Atheneum
   def self.method_missing(method_name, *arguments, &block)
-    begin
-      strategy = Strategy.const_get method_name.capitalize
-    rescue NameError
-      raise StrategyUndefined.new "Strategy \"#{method_name}\" not found"
-    end
+    strategy = Strategy.find method_name
+    
     storage = Storage.new strategy
     storage.for arguments
   end

@@ -5,7 +5,7 @@ class AtheneumTest < MiniTest::Test
     err = assert_raises Atheneum::StrategyUndefined do
       Atheneum.no_strategy
     end
-    assert_match(/no_strategy/, err.message)
+    assert_match(/NoStrategy/, err.message)
   end
 
   def test_can_store_a_password_reversed
@@ -36,5 +36,20 @@ class AtheneumTest < MiniTest::Test
     dummy_class = dummy_class.include Atheneum.reverse :other
     store = dummy_class.new 'other'.reverse
     assert_equal 'other', store.other
+  end
+
+  def test_can_store_a_item_upper_cased
+    dummy_class = Struct.new(:upper_cased_item)
+    dummy_class = dummy_class.include Atheneum.upper_case :item
+    store = dummy_class.new
+    store.item = 'item'
+    assert_equal 'item'.upcase, store.upper_cased_item
+  end
+
+  def test_can_retrieve_a_item_upper_cased
+    dummy_class = Struct.new(:upper_cased_item)
+    dummy_class = dummy_class.include Atheneum.upper_case :item
+    store = dummy_class.new 'item'.upcase
+    assert_equal 'item', store.item
   end
 end
