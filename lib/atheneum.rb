@@ -7,6 +7,10 @@ module Atheneum
       def password=(password)
         self.reversed_password = password.reverse
       end
+
+      def password
+        reversed_password.reverse
+      end
     end
   end
 end
