@@ -12,6 +12,10 @@ module Atheneum
       def prefix
         "upper_cased"
       end
+
+      def stored_attribute(attribute)
+        "#{prefix}_#{attribute}"
+      end
     end
   end
 end

@@ -19,23 +19,26 @@ module Atheneum
       Module.new do
         records.each do |record|
           define_method "#{record}=", ->(item){
-            self.send "#{strategy.prefix}_#{record}=", strategy.pack(item)
+            self.send "#{strategy.stored_attribute(record)}=", strategy.pack(item)
           }
 
           define_method record, -> (){
-            strategy.unpack(self.send("#{strategy.prefix}_#{record}"))
+            strategy.unpack(self.send("#{strategy.stored_attribute(record)}"))
           }
         end
       end
+    end
+
+    def self.generate strategy_name, attributes
+      strategy = Strategy.find strategy_name
+      storage = new strategy
+      storage.for attributes
     end
   end
 end
 
 module Atheneum
-  def self.method_missing(method_name, *arguments, &block)
-    strategy = Strategy.find method_name
-    
-    storage = Storage.new strategy
-    storage.for arguments
+  def self.method_missing(strategy, *attributes, &block)
+    Storage.generate strategy, attributes
   end
 end
