@@ -1,8 +1,6 @@
 # Atheneum
 > *noun* **place where records are stored**
 
-
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -20,7 +18,7 @@ Or install it yourself as:
     $ gem install atheneum
 
 ## Usage
-### Basic
+### Basic#
 
 You have a user record, it's always a user, that has a password. There is a `crypted_password` field on your model from the database. Atheneum can use the crypt strategy to take care of storing and retrieving the password. It will also privatise the original attribute accessors so the objects public interface is only the new attribute accessors.
 
@@ -56,7 +54,7 @@ class UserRecord < Struct.new(:crypted_password)
   private :crypted_password, :crypted_password=
 end
 ```
-### Options
+#### Options
 
 Storage methods accept more than one attribute. They also take an optional configuration hash
 
@@ -66,7 +64,7 @@ Storage methods accept more than one attribute. They also take an optional confi
 
   Strategies with no default prefix will use the strategies name eg `SomeStrategy` => `some_strategy`
 
-### New Storage Strategy
+#### New Storage Strategy
 
 Say you wanted some strings to be reversed before adding to the database. Perhaps exceptionally mild security.
 
@@ -101,11 +99,67 @@ location_record.obscured_name
 # => "eciffo"
 ```
 
+## Why?
+
+By privatising the existing attributes then the record object can remain an *immaculate record*, it appears to have only getters and setters. This is an example of how I have been using them. The example is with sequel, I have yet to try with active record but the priciple should hold.
+
+```rb
+require "sequel"
+require "atheneum"
+require "bcrypt"
+
+# connect to an in-memory database
+DB = Sequel.sqlite
+
+# create an users table
+DB.create_table :users do
+  primary_key :id
+  String :email
+  String :crypted_password
+end
+
+# create a user record
+class UserRecord < Sequel::Model(:users)
+  Atheneum.crypt :password
+end
+
+# create a user model
+class User < SimpleDelegator
+
+  def check_password(candidate_password)
+    password == candidate_password
+  end
+
+  private
+
+  def model
+    __getobj__
+  end
+
+end
+
+# In production
+user = User.new(UserRecord.new)
+user.password = 'password'
+user.check_password('password')
+# => true
+
+# In test
+TestRecord = Struct.new(:email, :password)
+user = User.new(TestRecord.new)
+user.password = 'password'
+user.check_password('password')
+# => true
+```
+
 #### Immaculate Record
 
-An immaculate record is one that acts purely as a data structure. In practise this works for all classes that can be proxied with a Struct/OpenStruct
+An immaculate record is one that acts purely as a data structure. In practise this works for all classes that can be proxied with a Struct/OpenStruct. Its value is in
 
-#### Password exmaple
+- Separating all buisness logic from state
+
+- fast tests
+
 
 ## Contributing
 
