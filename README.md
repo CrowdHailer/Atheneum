@@ -1,6 +1,6 @@
 # Atheneum
 
-TODO: Write a gem description
+#### A micro gem for the immaculate inclusion of BCrypt protected data for example passwords
 
 ## Installation
 
@@ -20,7 +20,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+#### Immaculate Record
+
+An immaculate record is one that acts purely as a data structure. In practise this works for all classes that can be proxied with a Struct/OpenStruct
+
+#### Password exmaple
 
 ## Contributing
 
