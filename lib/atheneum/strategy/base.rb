@@ -11,10 +11,19 @@ module Atheneum
         "#{prefix}_#{attribute}"
       end
 
+      def store_for(x)
+        stored_attribute(x)
+      end
+
       def prefix
         options.fetch(:prefix){
-          self.class.name.split('::').last.split(/(?=[A-Z])/).map(&:downcase).join('_')+'d'
+          default_prefix
         }
+      end
+
+      def default_prefix
+        str = self.class.name.split('::').last.split(/(?=[A-Z])/).map(&:downcase).join('_')
+        str[-1, 1] == 'e' ? str + 'd' : str + 'ed'
       end
 
       def privatise?

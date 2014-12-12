@@ -1,5 +1,6 @@
 require_relative './strategy/reverse'
 require_relative './strategy/upper_case'
+require_relative './strategy/crypt'
 
 module Atheneum
   class Strategy
