@@ -1,6 +1,8 @@
 # Atheneum
 > *noun* **place where records are stored**
 
+#### Turns out this is mostly just a reimplementation of the serialize plugins available with Active Record and Sequel. It might have some value by removeing information about how to serialize of an object. perhaps helping with consistence. Ie as a module serializing a price could be done by saving as an integer while in the process checking a currency method on the class.
+
 ## Installation
 
 Add this line to your application's Gemfile:
